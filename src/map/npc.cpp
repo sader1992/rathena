@@ -4791,6 +4791,8 @@ void do_init_npc(void){
 
 #ifdef CLIENTFILES
 		ShowStatus("Client File Generater is Enabled , Loading will take time.\n");
+		std::ofstream create("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua");
+		create.close();
 		std::ofstream out;
 		out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
 		out << "Navi_Npc = {\n";
