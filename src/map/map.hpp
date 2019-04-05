@@ -55,6 +55,8 @@ void map_msg_reload(void);
 #define MAX_VENDING 12
 #define MAX_MAP_SIZE 512*512 	// Wasn't there something like this already? Can't find it.. [Shinryo]
 
+#define CLIENTFILES
+
 //The following system marks a different job ID system used by the map server,
 //which makes a lot more sense than the normal one. [Skotlex]
 //
