@@ -3916,8 +3916,8 @@ int map_readallmaps (void)
 
 #ifdef CLIENTFILES
 		{
-			//(1)맵리소스명,		mapindex_id2name(mapdata->m) || mapindex_id2name(i)
-			//(2)맵이름,			//map name ? mapindex_id2name(mapdata->m)
+			//(1)맵리소스명,		mapindex_id2name(mapdata->m) || mapdata->name
+			//(2)맵이름,			//map name ? mapdata->name we don't have normal map name in the server
 			//(3)특수코드,		//code ? maybe id would be good for now , untill i know what it use for
 			//(4)위치X,			mapdata->bxs
 			//(5)위치Y			mapdata->bys
