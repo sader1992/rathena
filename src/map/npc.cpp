@@ -2972,7 +2972,7 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 			char input[500];
 			sprintf(input, "	{ \"%s\", %d, %d, %d, \"%s\", \"%s\", %d, %d },\n", mapindex_id2name(m), nd->bl.id, 101, nd->class_, name, aStrdup(nd->exname), x, y);
 			std::ofstream out;
-			out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lub", std::ios::out | std::ios::app | std::ios::binary);
+			out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
 			out << input;
 #endif
 		}
@@ -4790,12 +4790,10 @@ void do_init_npc(void){
 	npc_sc_display_ers = ers_new(sizeof(struct sc_display_entry), "npc.cpp:npc_sc_display_ers", ERS_OPT_NONE);
 
 #ifdef CLIENTFILES
-	{
 		ShowStatus("Client File Generater is Enabled , Loading will take time.\n");
 		std::ofstream out;
-		out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lub", std::ios::out | std::ios::app | std::ios::binary);
+		out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
 		out << "Navi_Npc = {\n";
-	}
 #endif
 	// process all npc files
 	ShowStatus("Loading NPCs...\r");
@@ -4820,13 +4818,10 @@ void do_init_npc(void){
 #endif
 
 #ifdef CLIENTFILES
-	{
 		ShowStatus("Client File Generater is Finished.\n");
-		std::ofstream out;
-		out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lub", std::ios::out | std::ios::app | std::ios::binary);
+		out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
 		out << "	{ \"NULL\", 0, 0, 0, \"\", \"\", 0, 0 }\n}\n";
 		out.close();
-	}
 #endif
 
 	//Debug function to locate all endless loop warps.
