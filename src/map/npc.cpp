@@ -2972,7 +2972,7 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 			char input[500];
 			sprintf(input, "	{ \"%s\", %d, %d, %d, \"%s\", \"%s\", %d, %d },\n", mapindex_id2name(m), nd->bl.id, 101, nd->class_, name, aStrdup(nd->exname), x, y);
 			std::ofstream out;
-			out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_scroll_krsak.lub", std::ios::out | std::ios::app | std::ios::binary);
+			out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lub", std::ios::out | std::ios::app | std::ios::binary);
 			out << input;
 #endif
 		}
@@ -4793,7 +4793,7 @@ void do_init_npc(void){
 	{
 		ShowStatus("Client File Generater is Enabled , Loading will take time.\n");
 		std::ofstream out;
-		out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_scroll_krsak.lub", std::ios::out | std::ios::app | std::ios::binary);
+		out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lub", std::ios::out | std::ios::app | std::ios::binary);
 		out << "Navi_Npc = {\n";
 	}
 #endif
@@ -4823,7 +4823,7 @@ void do_init_npc(void){
 	{
 		ShowStatus("Client File Generater is Finished.\n");
 		std::ofstream out;
-		out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_scroll_krsak.lub", std::ios::out | std::ios::app | std::ios::binary);
+		out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lub", std::ios::out | std::ios::app | std::ios::binary);
 		out << "	{ \"NULL\", 0, 0, 0, \"\", \"\", 0, 0 }\n}\n";
 		out.close();
 	}
