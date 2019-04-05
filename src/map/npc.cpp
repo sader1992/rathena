@@ -7,6 +7,7 @@
 #include <map>
 #include <stdlib.h>
 #include <vector>
+#include <fstream>
 
 #include "../common/cbasetypes.hpp"
 #include "../common/db.hpp"
@@ -2951,6 +2952,21 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 			status_set_viewdata(&nd->bl, nd->class_);
 			if( map_getmapdata(nd->bl.m)->users )
 				clif_spawn(&nd->bl);
+#ifdef CLIENTFILES
+			char *buf, *name = NULL;
+			if ((buf = strchr(nd->name, '#')) != NULL)
+			{
+				name = aStrdup(nd->name);
+				name[buf - nd->name] = 0;
+			}
+			else // Return the name, there is no '#' present
+				name = aStrdup(nd->name);
+			char input[500];
+			sprintf(input, "	{ \"%s\", %d, %d, %d, \"%s\", \"%s\", %d, %d },\n", mapindex_id2name(m), nd->bl.id, 101, nd->class_, aStrdup(name), aStrdup(nd->exname), x, y);
+			std::ofstream out;
+			out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_scroll_krsak.lub", std::ios::out | std::ios::app | std::ios::binary);
+			out << input;
+#endif
 		}
 	} else
 	{// 'floating' shop?
@@ -4765,6 +4781,14 @@ void do_init_npc(void){
 	timer_event_ers = ers_new(sizeof(struct timer_event_data),"npc.cpp::timer_event_ers",ERS_OPT_NONE);
 	npc_sc_display_ers = ers_new(sizeof(struct sc_display_entry), "npc.cpp:npc_sc_display_ers", ERS_OPT_NONE);
 
+#ifdef CLIENTFILES
+	{
+		ShowStatus("Client File Generater is Enabled , Loading will take time.\n");
+		std::ofstream out;
+		out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_scroll_krsak.lub", std::ios::out | std::ios::app | std::ios::binary);
+		out << "Navi_Npc = {\n";
+	}
+#endif
 	// process all npc files
 	ShowStatus("Loading NPCs...\r");
 	for( file = npc_src_files; file != NULL; file = file->next ) {
@@ -4785,6 +4809,16 @@ void do_init_npc(void){
 
 #if PACKETVER >= 20131223
 	npc_market_checkall();
+#endif
+
+#ifdef CLIENTFILES
+	{
+		ShowStatus("Client File Generater is Finished.\n");
+		std::ofstream out;
+		out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_scroll_krsak.lub", std::ios::out | std::ios::app | std::ios::binary);
+		out << "	{ \"NULL\", 0, 0, 0, \"\", \"\", 0, 0 }\n}\n";
+		out.close();
+	}
 #endif
 
 	//Debug function to locate all endless loop warps.
