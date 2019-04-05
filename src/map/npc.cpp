@@ -1,4 +1,4 @@
-// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
+﻿// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
 #include "npc.hpp"
@@ -2953,16 +2953,24 @@ static const char* npc_parse_shop(char* w1, char* w2, char* w3, char* w4, const 
 			if( map_getmapdata(nd->bl.m)->users )
 				clif_spawn(&nd->bl);
 #ifdef CLIENTFILES
+			//(1)맵리소스명,			mapindex_id2name(m)
+			//(2)유니크 코드,			++
+			//(3)타입,				101
+			//(4)스프라이트번호,		nd->class_
+			//(5)이름1,				nd->name
+			//(6)이름2,				nd->exname
+			//(7)위치X,				x
+			//(8)위치Y				y
 			char *buf, *name = NULL;
 			if ((buf = strchr(nd->name, '#')) != NULL)
 			{
 				name = aStrdup(nd->name);
 				name[buf - nd->name] = 0;
 			}
-			else // Return the name, there is no '#' present
+			else
 				name = aStrdup(nd->name);
 			char input[500];
-			sprintf(input, "	{ \"%s\", %d, %d, %d, \"%s\", \"%s\", %d, %d },\n", mapindex_id2name(m), nd->bl.id, 101, nd->class_, aStrdup(name), aStrdup(nd->exname), x, y);
+			sprintf(input, "	{ \"%s\", %d, %d, %d, \"%s\", \"%s\", %d, %d },\n", mapindex_id2name(m), nd->bl.id, 101, nd->class_, name, aStrdup(nd->exname), x, y);
 			std::ofstream out;
 			out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_scroll_krsak.lub", std::ios::out | std::ios::app | std::ios::binary);
 			out << input;
