@@ -1,10 +1,11 @@
-// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
+﻿// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
 #include "map.hpp"
 
 #include <stdlib.h>
 #include <math.h>
+#include <fstream>
 
 #include "../common/cbasetypes.hpp"
 #include "../common/cli.hpp"
@@ -3839,7 +3840,14 @@ int map_readallmaps (void)
 	}
 
 	int maps_removed = 0;
-
+#ifdef CLIENTFILES
+	ShowStatus("Client File Generater is Enabled , Loading will take time.\n");
+	std::ofstream create("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_map_krsak.lua");
+	create.close();
+	std::ofstream out;
+	out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_map_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
+	out << "Navi_Map = {\n";
+#endif
 	for (int i = 0; i < map_num; i++) {
 		size_t size;
 		bool success = false;
@@ -3905,8 +3913,25 @@ int map_readallmaps (void)
 		mapdata->qi_count = 0;
 		mapdata->qi_data = NULL;
 		mapdata->channel = NULL;
-	}
 
+#ifdef CLIENTFILES
+		{
+			//(1)맵리소스명,		mapindex_id2name(mapdata->m) || mapindex_id2name(i)
+			//(2)맵이름,			//map name ? mapindex_id2name(mapdata->m)
+			//(3)특수코드,		//code ? maybe id would be good for now , untill i know what it use for
+			//(4)위치X,			mapdata->bxs
+			//(5)위치Y			mapdata->bys
+			char input[500];
+			sprintf(input, "	{ \"%s\", \"%s\", %d, %d, %d },\n", mapdata->name, mapdata->name, mapdata->m, mapdata->xs, mapdata->ys);
+			out << input;
+		}
+#endif
+	}
+#ifdef CLIENTFILES
+	ShowStatus("Client File Generater is Finished.\n");
+	out << "	{ \"NULL\", \"\", 0, 0, 0 }\n}\n";
+	out.close();
+#endif
 	// intialization and configuration-dependent adjustments of mapflags
 	map_flags_init();
 
