@@ -4074,7 +4074,38 @@ static const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const c
 	}
 
 	npc_mob++;
+#ifdef CLIENTFILES
+	{
+		//(1) map resource name,
+		//(2) Unique code,
+		//(3) Type,
+		//(4) Sprite number,
+		//(5) Name 1,
+		//(6) Name 2,
+		//(7) Level,
+		//(7)
+		//(1)맵리소스명, (2)유니크 코드, (3)타입, (4)스프라이트번호, (5)이름1, (6)이름2, (7)레벨, (7)???? 
+		//ShowStatus("Client File Generater is Enabled , Loading will take time.\n");
+					//std::ofstream create("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua");
+					//create.close();
+		std::ofstream monster_out;
+		//out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
+		//out << "Navi_Npc = {\n";
 
+		//ShowStatus("Client File Generater is Finished.\n");
+		monster_out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_mob_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
+		//out << "	{ \"NULL\", 0, 0, 0, \"\", \"\", 0, 0 }\n}\n";
+		char input[500];
+		struct mob_data* md = mob_spawn_dataset(data);
+		//{ "abbey01", 20693, 300, 3736588, "구울", "GHOUL", 61, 3211521 }, //mob.name
+		sprintf(input, "	{ \"%s\", %d, %d, %d, \"%s\", \"%s\", %d, %d },\n", mapname, std::count(std::ofstreambuf_iterator<char>(monster_out),
+			std::istreambuf_iterator<char>(), '\n'),(300 + (int)mob.state.boss),((num << 16) | md->status.class_),md->name, md->name,md->level, (uint32)((uint32)((uint32)(md->status.ele_lv*20 + md->status.def_ele) << 16) | (uint32)md->status.size << 8) | (uint32)md->status.race );
+		//sprintf(input, "	{ \"%s\", %d, %d },\n", mapname, mob.id , mob.num);
+			//sprintf(input, "	{ \"%s\", \"%s\", %d, %d, %d },\n", mapdata->name, mapdata->name, mapdata->m, mapdata->xs, mapdata->ys);
+		monster_out << input;
+		monster_out.close();
+	}
+#endif
 	return strchr(start,'\n');// continue
 }
 
@@ -4458,8 +4489,36 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit)
 		}
 		else if( (i=0, sscanf(w2,"duplicate%n",&i), (i > 0 && w2[i] == '(')) && count > 3 )
 			p = npc_parse_duplicate(w1,w2,w3,w4, p, buffer, filepath);
-		else if( (strcmpi(w2,"monster") == 0 || strcmpi(w2,"boss_monster") == 0) && count > 3 )
+		else if ((strcmpi(w2, "monster") == 0 || strcmpi(w2, "boss_monster") == 0) && count > 3) {
+			// w1=<map name>{,<x>,<y>,<xs>{,<ys>}}
+			// w3=<mob name>{,<mob level>}
+			// w4=<mob id>,<amount>{,<delay1>{,<delay2>{,<event>{,<mob size>{,<mob ai>}}}}}
+
+//#ifdef CLIENTFILES
+//			{
+//				//(1)맵리소스명, (2)유니크 코드, (3)타입, (4)스프라이트번호, (5)이름1, (6)이름2, (7)레벨, (7)???? 
+//				//ShowStatus("Client File Generater is Enabled , Loading will take time.\n");
+//							//std::ofstream create("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua");
+//							//create.close();
+//				std::ofstream out;
+//				//out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
+//				//out << "Navi_Npc = {\n";
+//
+//				//ShowStatus("Client File Generater is Finished.\n");
+//				out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
+//				//out << "	{ \"NULL\", 0, 0, 0, \"\", \"\", 0, 0 }\n}\n";
+//				char input[500];
+//				//{ "abbey01", 20693, 300, 3736588, "구울", "GHOUL", 61, 3211521 },
+//					sprintf(input, "	{ \"%s\", %d, %d, %d, \"%s\", \"%s\", %d, %d },\n",
+//				//sprintf(input, "	{ \"%s\", \"%s\", %d, %d, %d },\n", mapdata->name, mapdata->name, mapdata->m, mapdata->xs, mapdata->ys);
+//				out << input;
+//				out.close();
+//			}
+//#endif
+
 			p = npc_parse_mob(w1, w2, w3, w4, p, buffer, filepath);
+		}
+			
 		else if( strcmpi(w2,"mapflag") == 0 && count >= 3 )
 			p = npc_parse_mapflag(w1, w2, trim(w3), trim(w4), p, buffer, filepath);
 		else {
@@ -4791,12 +4850,20 @@ void do_init_npc(void){
 
 #ifdef CLIENTFILES
 		ShowStatus("Client File Generater is Enabled , Loading will take time.\n");
-		std::ofstream create("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua");
-		create.close();
-		std::ofstream out;
-		out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
-		out << "Navi_Npc = {\n";
+		std::ofstream npc_create("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua");
+		npc_create.close();
+		std::ofstream npc_out;
+		npc_out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
+		npc_out << "Navi_Npc = {\n";
+
+		std::ofstream mob_create("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_mob_krsak.lua");
+		mob_create.close();
+		std::ofstream monster_out;
+		monster_out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_mob_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
+		monster_out << "Navi_Mob = {\n";
+
 #endif
+
 	// process all npc files
 	ShowStatus("Loading NPCs...\r");
 	for( file = npc_src_files; file != NULL; file = file->next ) {
@@ -4821,9 +4888,13 @@ void do_init_npc(void){
 
 #ifdef CLIENTFILES
 		ShowStatus("Client File Generater is Finished.\n");
-		out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
-		out << "	{ \"NULL\", 0, 0, 0, \"\", \"\", 0, 0 }\n}\n";
-		out.close();
+		npc_out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
+		npc_out << "	{ \"NULL\", 0, 0, 0, \"\", \"\", 0, 0 }\n}\n";
+		npc_out.close();
+
+		monster_out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_mob_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
+		monster_out << "	{ \"NULL\", 0, 0, 0, \"\", \"\", 0, 0 }\n}\n";
+		monster_out.close();
 #endif
 
 	//Debug function to locate all endless loop warps.
