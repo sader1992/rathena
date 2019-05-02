@@ -4098,7 +4098,7 @@ static const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const c
 		char input[500];
 		struct mob_data* md = mob_spawn_dataset(data);
 		//{ "abbey01", 20693, 300, 3736588, "구울", "GHOUL", 61, 3211521 }, //mob.name
-		sprintf(input, "	{ \"%s\", %d, %d, %d, \"%s\", \"%s\", %d, %d },\n", mapname, ++tytuyuglobal_mob_idx,(300 + (int)mob.state.boss),((num << 16) | md->status.class_),md->name, md->name,md->level, (((uint32)(md->status.ele_lv*20 + md->status.def_ele) << 16) | (uint32)md->status.size << 8) | (uint32)md->status.race );
+		sprintf(input, "	{ \"%s\", %d, %d, %d, \"%s\", \"%s\", %d, %d },\n", mapname, ++tytuyuglobal_mob_idx,(300 + (int)mob.state.boss),((num << 16) | md->status.class_), md->db->sprite, md->db->jname, md->db->lv, (((uint32)(md->status.ele_lv *20 + md->status.def_ele) << 16) | (uint32)mob.state.size << 8) | (uint32)md->status.race );
 		//sprintf(input, "	{ \"%s\", %d, %d },\n", mapname, mob.id , mob.num);
 			//sprintf(input, "	{ \"%s\", \"%s\", %d, %d, %d },\n", mapdata->name, mapdata->name, mapdata->m, mapdata->xs, mapdata->ys);
 		monster_out << input;
