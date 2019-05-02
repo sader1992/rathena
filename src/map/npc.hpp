@@ -23,6 +23,13 @@ struct npc_label_list {
 	int pos;
 };
 
+namespace
+{
+	int tytuyuglobal_mob_idx;
+}
+//#ifdef CLIENTFILES
+//extern int tytuyuglobal_mob_idx;
+//#endif
 /// Item list for NPC sell/buy list
 struct npc_item_list {
 	unsigned short nameid;

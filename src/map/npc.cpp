@@ -4098,8 +4098,7 @@ static const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const c
 		char input[500];
 		struct mob_data* md = mob_spawn_dataset(data);
 		//{ "abbey01", 20693, 300, 3736588, "구울", "GHOUL", 61, 3211521 }, //mob.name
-		sprintf(input, "	{ \"%s\", %d, %d, %d, \"%s\", \"%s\", %d, %d },\n", mapname, std::count(std::ofstreambuf_iterator<char>(monster_out),
-			std::istreambuf_iterator<char>(), '\n'),(300 + (int)mob.state.boss),((num << 16) | md->status.class_),md->name, md->name,md->level, (uint32)((uint32)((uint32)(md->status.ele_lv*20 + md->status.def_ele) << 16) | (uint32)md->status.size << 8) | (uint32)md->status.race );
+		sprintf(input, "	{ \"%s\", %d, %d, %d, \"%s\", \"%s\", %d, %d },\n", mapname, ++tytuyuglobal_mob_idx,(300 + (int)mob.state.boss),((num << 16) | md->status.class_),md->name, md->name,md->level, (((uint32)(md->status.ele_lv*20 + md->status.def_ele) << 16) | (uint32)md->status.size << 8) | (uint32)md->status.race );
 		//sprintf(input, "	{ \"%s\", %d, %d },\n", mapname, mob.id , mob.num);
 			//sprintf(input, "	{ \"%s\", \"%s\", %d, %d, %d },\n", mapdata->name, mapdata->name, mapdata->m, mapdata->xs, mapdata->ys);
 		monster_out << input;
@@ -4515,7 +4514,7 @@ int npc_parsesrcfile(const char* filepath, bool runOnInit)
 //				out.close();
 //			}
 //#endif
-
+			
 			p = npc_parse_mob(w1, w2, w3, w4, p, buffer, filepath);
 		}
 			
@@ -4861,7 +4860,7 @@ void do_init_npc(void){
 		std::ofstream monster_out;
 		monster_out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_mob_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
 		monster_out << "Navi_Mob = {\n";
-
+		tytuyuglobal_mob_idx = 17104;
 #endif
 
 	// process all npc files
