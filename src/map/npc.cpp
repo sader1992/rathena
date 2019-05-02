@@ -4051,7 +4051,9 @@ static const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const c
 	mob_add_spawn(mob_id, spawn);
 
 	//Now that all has been validated. We allocate the actual memory that the re-spawn data will use.
+	
 	data = (struct spawn_data*)aMalloc(sizeof(struct spawn_data));
+	
 	memcpy(data, &mob, sizeof(struct spawn_data));
 
 	// spawn / cache the new mobs
@@ -4077,17 +4079,18 @@ static const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const c
 #ifdef CLIENTFILES
 	{
 		//(1) map resource name,
-		//(2) Unique code,
-		//(3) Type,
+		//(2) Unique code,<< ?
+		//(3) Type,<< ?
 		//(4) Sprite number,
 		//(5) Name 1,
 		//(6) Name 2,
 		//(7) Level,
-		//(7)
-		//(1)맵리소스명, (2)유니크 코드, (3)타입, (4)스프라이트번호, (5)이름1, (6)이름2, (7)레벨, (7)???? 
+		//(8) << ?
+		//(1)맵리소스명, (2)유니크 코드, (3)타입, (4)스프라이트번호, (5)이름1, (6)이름2, (7)레벨, (8)???? 
 		//ShowStatus("Client File Generater is Enabled , Loading will take time.\n");
 					//std::ofstream create("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua");
 					//create.close();
+		struct mob_data* md = mob_spawn_dataset(&mob);
 		std::ofstream monster_out;
 		//out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_npc_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
 		//out << "Navi_Npc = {\n";
@@ -4096,9 +4099,11 @@ static const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const c
 		monster_out.open("./Client Files/data/LuaFiles514/Lua Files/navigation/navi_mob_krsak.lua", std::ios::out | std::ios::app | std::ios::binary);
 		//out << "	{ \"NULL\", 0, 0, 0, \"\", \"\", 0, 0 }\n}\n";
 		char input[500];
-		struct mob_data* md = mob_spawn_dataset(data);
+		
 		//{ "abbey01", 20693, 300, 3736588, "구울", "GHOUL", 61, 3211521 }, //mob.name
-		sprintf(input, "	{ \"%s\", %d, %d, %d, \"%s\", \"%s\", %d, %d },\n", mapname, ++tytuyuglobal_mob_idx,(300 + (int)mob.state.boss),((num << 16) | md->status.class_), md->db->sprite, md->db->jname, md->db->lv, ((static_cast<uint32>(md->status.ele_lv) *20 + static_cast<uint32>(md->status.def_ele)) << 16) | (mob.state.size << 8) | static_cast<uint32>(md->status.race) );
+		//ShowError("'%d','%d','%d','%d'.\n", md->db->status.ele_lv, md->db->status.def_ele, md->db->status.size, md->db->status.race);
+
+		sprintf(input, "	{ \"%s\", %d, %d, %d, \"%s\", \"%s\", %d, %d },\n", mapname, ++tytuyuglobal_mob_idx,(300 + (int)mob.state.boss),((num << 16) | md->db->status.class_), md->db->sprite, md->db->jname, md->db->lv, ((static_cast<uint32>(md->db->status.ele_lv) *20 + static_cast<uint32>(md->db->status.def_ele)) << 16) | (static_cast<uint32>(md->db->status.size) << 8) | static_cast<uint32>(md->db->status.race) );
 		//sprintf(input, "	{ \"%s\", %d, %d },\n", mapname, mob.id , mob.num);
 			//sprintf(input, "	{ \"%s\", \"%s\", %d, %d, %d },\n", mapdata->name, mapdata->name, mapdata->m, mapdata->xs, mapdata->ys);
 		monster_out << input;
