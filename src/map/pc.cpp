@@ -13114,6 +13114,14 @@ void pc_attendance_claim_reward( struct map_session_data* sd ){
 		return;
 	}
 
+	//Sader Attendance Requirement
+	char attendance_requirement[NAME_LENGTH];
+	sprintf(attendance_requirement, "#Attendance_%d", date_get(DT_YYYYMMDD));
+	if (!pc_readreg2(sd, attendance_requirement)) {
+		clif_messagecolor(&sd->bl, color_table[COLOR_LIGHT_GREEN], "You don't meet the requirment.", false, SELF);
+		return;
+	}
+
 	int32 attendance_counter = pc_readreg2( sd, ATTENDANCE_COUNT_VAR );
 
 	attendance_counter += 1;
