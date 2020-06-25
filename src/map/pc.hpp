@@ -1349,7 +1349,7 @@ void pc_inventory_rental_add(struct map_session_data *sd, unsigned int seconds);
 
 int pc_read_motd(void); // [Valaris]
 int pc_disguise(struct map_session_data *sd, int class_);
-bool pc_isautolooting(struct map_session_data *sd, unsigned short nameid);
+bool pc_isautolooting(struct map_session_data *sd, unsigned short nameid, struct mob_data* md);
 
 void pc_overheat(struct map_session_data *sd, int16 heat);
 

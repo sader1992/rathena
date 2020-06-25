@@ -11497,9 +11497,12 @@ void pc_overheat(struct map_session_data *sd, int16 heat) {
 /**
  * Check if player is autolooting given itemID.
  */
-bool pc_isautolooting(struct map_session_data *sd, unsigned short nameid)
+bool pc_isautolooting(struct map_session_data *sd, unsigned short nameid, struct mob_data* md)
 {
 	uint8 i = 0;
+
+	if (itemdb_type(nameid) == 6 || (md && status_has_mode(&md->status, MD_MVP)))
+		return false;
 
 	if (sd->state.autoloottype && sd->state.autoloottype&(1<<itemdb_type(nameid)))
 		return true;
